@@ -1,0 +1,103 @@
+{
+    "_id": {
+        "$oid": "5eac227dbc49960ba239657a"
+    },
+    "genre": "R&B",
+    "singer": [
+        {
+            "name": "Adele",
+            "lyrics": [
+                "Hello, it's me. I was wondering if after all these years you'd like to meet.",
+                "I heard that you're settled down, that you found a girl and you're married now.",
+                "There's a fire starting in my heart. Reaching a fever pitch and it's bringing me out the dark."
+            ]
+        },
+        {
+            "name": "Beyonce",
+            "lyrics": [
+                "Remember those walls I built. Well, baby, they're tumbling down.",
+                "Listen to the song here in my heart. A melody I start, but can't complete",
+                "If I were a boy, even just for a day"
+            ]
+        },
+        {
+            "name": "Alicia Keys",
+            "lyrics": [
+                "I keep on fallin In and out of love",
+                "I just want you close, where you can stay forever",
+                "She's just a girl, and she's on fire"
+            ]
+        }
+    ]
+}
+{
+    "_id": {
+        "$oid": "5eac26e1bc49960ba239657b"
+    },
+    "genre": "Pop",
+    "singer": [
+        {
+            "name": "James Blunt",
+            "lyrics": [
+                "Did I disappoint you or let you down?",
+                "Beautiful dawn. Lights up the shore for me.",
+                "There are children standing here, arms outstretched and to the sky."
+            ]
+        },
+        {
+            "name": "Lady Gaga",
+            "lyrics": [
+                "You're giving me a million reasons to let you go. You're giving me a million reasons to quit the show.",
+                "Tell me something, girl. Are you happy in this modern world?",
+                "I can't wait to smoke them all Whole pack like marlboro."
+            ]
+        },
+        {
+            "name": "Ed Sheeran",
+            "lyrics": [
+                "Loving can hurt, loving can hurt sometimes.",
+                "The club isn't the best place to find a lover, So the bar is where I go.",
+                "I found a love for me. Darling just dive right in."
+            ]
+        }
+    ]
+}
+{
+    "_id": {
+        "$oid": "5eac27cabc49960ba239657c"
+    },
+    "genre": "Rock",
+    "singer": [
+        {
+            "name": "Queen",
+            "lyrics": [
+                "Mama, just killed a man. Put a gun against his head.",
+                "Can anybody find me somebody to love?",
+                "Tonight, I'm gonna have myself a real good time."
+            ]
+        },
+        {
+            "name": "U2",
+            "lyrics": [
+                "I have climbed the highest mountains, I have run through the fields.",
+                "Is it getting better Or do you feel the same?",
+                "You say you want diamonds on a ring of gold."
+            ]
+        },
+        {
+            "name": "Red Hot",
+            "lyrics": [
+                "Standing in line to see the show tonight.",
+                "Psychic spies from China try to steal your mind's elation.",
+                "Come to decide that the things that I tried.",
+                "You always sing, you always sing the, you always sing the same."
+            ]
+        }
+    ]
+}
+{
+    "genre": "uncategorized",
+    "_id": {
+        "$oid": "5ead5aeebc49960ba239657d"
+    }
+}
