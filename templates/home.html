@@ -1,0 +1,88 @@
+<!-- Tutorial en: https://www.youtube.com/watch?v=oZa2Ut8u2S0-->
+
+<!doctype html>
+
+<head>
+  <title>Home Page</title>
+  <style type="text/css">
+    * {
+        padding: 0px;
+    }
+
+    h1 {
+      font-size: 60px;
+      margin-top: 50px;
+      font-weight: bold;
+      color:lightsteelblue
+    }
+
+    #header { 
+      margin:50px; /*auto*/
+      widows:500px; /*ancho del header*/
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    ul, ol { /*listas sin puntito*/
+      list-style:none;
+    }
+
+    .nav li a { /*Para todos los elementos que pertenezcan a "a", li y nav*/
+      background-color: crimson; /*Color de la celda*/
+      color:darkgray; /*Color de la fuente*/
+      width:100px;
+      text-decoration: none;
+      padding:10px 15px;
+      display:block; /*Todos los eltos en bloque*/
+    } 
+
+    .nav li a:hover{  /*Para cuando pasamos el mouse*/
+      background-color: darkolivegreen;
+    }
+
+    .nav > li {
+      float: left; /*left, right*/
+      align-items: center;
+    }
+
+    .nav li ul { 
+      display: none; /*Desaparecen todos los submenús*/
+      position:absolute;
+      min-width: 140px;
+    }
+
+    .nav li:hover > ul { /*Obj nav li que sean directos de ul*/
+      display:block
+    }
+  </style>
+</head>
+<body style="background-color: rgba(7, 48, 58, 0.849);">  
+  <center>
+    <h1>Wellcome to API lyrics</h1><br><br>  
+    <div>
+      <img src="https://media2.giphy.com/media/6Fd0P70BD4ezu/giphy.gif?cid=ecf05e475320f56ab099b64ca2b4d18b5c917d90f67416ee&rid=giphy.gif"/>
+    </div>
+    <div id="header">
+      <ul class="nav">
+          <li><a>Artists</a>
+            <ul>
+              <li><a href="addlyrics">Add lyrics</a></li>
+              <li><a href="recommend">Recommend</a></li>                
+            </ul>
+        </li>
+        <li><a>Genres</a>
+            <ul>
+              <li><a href="assigngenre">Assign genres</a></li>
+              <li><a href="seelyrics">See lyrics</a></li>
+              <li><a href="sentiment">Sentiment</a></li>
+            </ul>
+        </li>
+          <li><a>Add New</a>
+            <ul>
+              <li><a href="create">Add new</a></li>
+            </ul>
+        </li>
+      </ul>
+    </div>
+
+  </center>
+  </body>

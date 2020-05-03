@@ -1,0 +1,33 @@
+<head>
+    <style>
+    * {
+        margin-top: 10px;
+    }
+    h1 {
+        text-align:center;
+        color:lightsteelblue
+    }
+
+    label {
+        color: white;
+      }
+
+    input {
+        margin-left: 50;
+    }
+    </style>
+</head>    
+
+<body style="background-color: rgba(7, 48, 58, 0.849);"> 
+    <h1>{{title}}</h1>
+    <form action={{url}} method="POST">
+        
+        <label style="margin-left: 50"><b>{{category}}</b></label><br>
+        <input type="text" name="name"/><br/><br/>
+        <input type="submit" value="Enter"/>
+    </form>
+
+    <form method="get" action="/">
+        <button style="float:right; margin-right: 100">Home</button>
+    </form>
+</body>

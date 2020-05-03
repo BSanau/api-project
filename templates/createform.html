@@ -1,0 +1,40 @@
+<head>
+    <style>
+    * {
+        margin-top: 10px;
+    }
+    h1 {
+        text-align:center;
+        color:lightsteelblue
+    }
+
+    label {
+        color: white;
+      }
+
+    input {
+        margin-left: 50;
+    }
+    </style>
+</head>    
+
+<body style="background-color: rgba(7, 48, 58, 0.849);"> 
+    <h1>Create a new entry</h1>
+    <form action="/create" method="POST">
+
+        <label style="margin-left: 50"><b>Category:</b></label><br>
+        <input type="radio" id="genre" name="category" value="genre">
+        <label for="genre">Music genre</label><br>
+        <input type="radio" id="singer" name="category" value="singer">
+        <label for="singer">Artist</label><br><br>
+
+        <label style="margin-left: 50"><b>Name:</b></label><br>
+        <input type="text" name="name"/><br/><br/>
+
+        <input type="submit" value="Create"/>               
+    </form>
+
+    <form method="get" action="/">
+        <button style="float:right; margin-right: 100">Home</button>
+    </form>
+</body>
