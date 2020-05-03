@@ -93,9 +93,9 @@ def SentimentGenre():
         name=request.form.get("name")              
         if CheckInfoAvailable ("genre", name):  
             response = sentimentAnalysisGenre(name)
-            return render_template('sentiment.html', 
-                    neg=response["neg"], neu=response["neu"], pos=response["pos"], comp=response["compound"])
-            #jsonify(sentimentAnalysisGenre(name))
+            return jsonify(sentimentAnalysisGenre(name)) 
+            #render_template('sentiment.html', 
+                   # neg=response["neg"], neu=response["neu"], pos=response["pos"], comp=response["compound"])
 
         raise APIError(f"Genre {name} is not in the database yet or has no lyrics")
     else:
