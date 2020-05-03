@@ -1,10 +1,11 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, jsonify
 
 from SRC.config_params import PORT
 from SRC.app import app
-from SRC.mongo import AddNew, GetListWithQuery
+from SRC.mongo import *
 from SRC.helpers.handle_errors import errorHandler, APIError
-from SRC.recommender import GetRecommendation
+from SRC.recommender import GetRecommendation, GetjsonSingers
+from SRC.sentiment import sentimentAnalysisGenre
 
 
 # RUNNING APP
@@ -12,52 +13,39 @@ from SRC.recommender import GetRecommendation
 def wellcome():
     return render_template('home.html')
 
+
 # ADD NEW SINGER/GENRE
 @app.route("/create",methods=["GET","POST"])
 @errorHandler
 def CreateNew():
     if request.method=="POST":
-        # Check category value
-        category=request.form.get("category")
-        if category not in ["genre", "singer"]:
-            raise APIError(f"{category} not in the database. Enter genre or singer.")
 
-        # Check name value
+        category = request.form.get("category")
         name=request.form.get("name")
-        lista = GetListWithQuery(category, name)
+        lista = GetListWithQuery(category, name) # check if name exists
         if lista:
             raise APIError(f"{name} already exists.")
 
         response = AddNew(category, name)
-        return response
+        return render_template('response.html', value=response)
     else:
-        return '''<form action="/create" method="POST">
-                <label>Category:</label>
-                <input type="text" name="category"/>
-                <label>Name:</label>
-                <input type="text" name="name"/><br/><br/>
-                <input type="submit"/>
-                </form>'''
+        return render_template('createform.html')
 
 
-# RECOMMEND SINGER TO ANOTHER SINGER
+# RECOMMEND SINGER 
 @app.route("/recommend",methods=["GET","POST"])
 @errorHandler
 def RecommendMe():
     if request.method=="POST":
-        # Check name value
-        name=request.form.get("name")
-        lista = GetListWithQuery("singer", name)
-        if lista:
-            return GetRecommendation(name)#f"You wrote {name}"
-        raise APIError(f"{name} not in the database or has no lyrics.")
+
+        name=request.form.get("name")      
+        if CheckInfoAvailable ("singer.name", name):
+            return jsonify(GetjsonSingers(name))
+
+        raise APIError(f"{name} is not in the database or has no lyrics.")
     else:
-        return '''<form action="/recommend" method="POST">
-                <h1>Find singers similars to:</h1>
-                <label>Name:</label>
-                <input type="text" name="name"/><br/><br/>
-                <input type="submit" value="Make recommendation"/>
-                </form>'''
+        return render_template('generalform.html', 
+                url ="/recommend", title="Find singers similars to:", category="Artist:")
 
 
 # ADD LYRICS TO AN ARTIST
@@ -65,113 +53,77 @@ def RecommendMe():
 @errorHandler
 def NewGenreWithPeople():
     if request.method=="POST":               
-        # Check name value
+        
         name=request.form.get("name")
-        lista = GetListWithQuery("singer", name)
-        if lista:
-            lyrics = request.form.get("lyrics")
-            return f"You added lyrics to {name}"
+        lista = GetListWithQuery("singer", name) # Check name value       
+        if lista:   
+            lyrics = request.form.get("lyrics")                    
+            response = AddLyrics(name, lyrics)
+            return render_template('response.html', value=response)
+
         raise APIError(f"{name} is not in the database yet, why don't you create it?")
     else:
-        return '''<form action="/addlyrics" method="POST">
-                <h1>Add some lyrics</h1>
-                <label>Artist:</label>
-                <input type="text" name="name"/><br/><br/>
-                <label>Lyrics:</label>
-                <input type="text" lyrics="lyrics" size="50"/><br/><br/>
-                <input type="submit" value="Add Lyrics"/>
-                </form>'''
-"""
-## CREATE NEW SINGER/GENRE
-@app.route("/<category>/create", methods = ["GET", "POST"])
+        return render_template('addlyricsform.html')
+
+
+# SEE THE LYRICS OF A GENRE
+@app.route("/seelyrics",methods=["GET","POST"])
 @errorHandler
-def AddNewCategory (category):
-    if request.method == "GET":
-        return render_template('paramspage.html')
-    elif request.method == "POST":
-        name = request.form["nm"]
-        response = AddNew(category, name)
-        return f"Inserted"
-        #render_template('resultpage.html', response = response)
-    #if category not in ["genre", "singer"]:
-    #    raise APIError(f"{category} not in the database. Enter genre or singer.")
-    #name = request.args["name"] #BORRAR
-    #return AddNew(category, name) #BORRAR
-    #return f"Add new {category}: {name}"
-# En el navegador: localhost:3500/singer/create?name=Lola 
-"""
-"""
-@app.route("/suma",methods=["GET","POST"])
-def sumar():
-    if request.method=="POST":
-        num1=request.form.get("num1")
-        num2=request.form.get("num2")
-        return "<h1>El resultado de la suma es {}</h1>".format(str(int(num1)+int(num2)))
+def ShowLyrics():
+    if request.method=="POST":   
+
+        name=request.form.get("name")        
+        lista = GetListWithQuery("genre", name)  # Check genre name      
+        if lista:  
+            return jsonify(GetjsonLyrics(name))
+
+        raise APIError(f"genre {name} is not in the database yet or has no lyrics")
     else:
-        return '''<form action="/suma" method="POST">
-                <label>N1:</label>
-                <input type="text" name="num1"/>
-                <label>N2:</label>
-                <input type="text" name="num2"/><br/><br/>
-                <input type="submit"/>
-                </form>'''
-"""
-
-# ARTISTS PAGE
+        return render_template('generalform.html', 
+                url ="/seelyrics", title="Enter a genre to see its lyrics", category="Genre:")
 
 
-"""
-# TEST
-@app.route("/test", methods = ["GET", "POST"])
-def test():
-    if request.method == "GET":
-        return render_template('test.html')
-    elif request.method == "POST":
-        response = request.form["nm"]
-        return f"You wrote {response}"
-        #return redirect(url_for("beafunc", var="guapa"))
 
-@app.route("/bea")
-def beafunc(var):
-    return f"Bea {var}"
-"""
-
-"""
-# FINDING SINGER/GENRE
-@app.route("/<category>/<name>", methods = ["GET", "POST"])
+# SENTIMENT OF A GENRE
+@app.route("/sentiment",methods=["GET","POST"])
 @errorHandler
-def ShowData(category, name):
-    if category not in ["genre", "singer"]:
-        raise APIError(f"{category} not in the database. Enter genre or singer.")
-    lista = GetListWithQuery(category, name)
-    if lista:
-        print(f"{category} tiene lista")
-        return GetData (lista, category, name)
-    raise APIError(f"{category}: {name} not in the database")
+def SentimentGenre():
+    if request.method=="POST":   
+
+        name=request.form.get("name")              
+        if CheckInfoAvailable ("genre", name):  
+            response = sentimentAnalysisGenre(name)
+            return render_template('sentiment.html', 
+                    neg=response["neg"], neu=response["neu"], pos=response["pos"], comp=response["compound"])
+            #jsonify(sentimentAnalysisGenre(name))
+
+        raise APIError(f"Genre {name} is not in the database yet or has no lyrics")
+    else:
+        return render_template('generalform.html', 
+                url ="/sentiment", title="Enter a genre to see its sentiment", category="Genre:")
 
 
-## CREATE NEW SINGER/GENRE
-@app.route("/<category>/create", methods = ["GET", "POST"])
+
+# ASSIGN ANOTHER GENRE TO A SINGER
+@app.route("/assigngenre",methods=["GET","POST"])
 @errorHandler
-def AddNewCategory (category):   
-    if category not in ["genre", "singer"]:
-        raise APIError(f"{category} not in the database. Enter genre or singer.")
-    name = request.args["name"]
-    return AddNew(category, name)
-    #return f"Add new {category}: {name}"
-# En el navegador: localhost:3500/singer/create?name=Lola 
-"""
+def AssignGenre():
+    if request.method=="POST":   
 
-## ADD LYRICS
-#@app.route("/singer/addlyrics", methods = ["GET", "POST"])
+        name=request.form.get("name")  
+        genre=request.form.get("genre")   
+        lista_1 = GetListWithQuery("singer", name)  # Check singer name  
+        lista_2 = GetListWithQuery("genre", genre)  # Check genre name               
+        if lista_1:
+            if lista_2:
+                response = ChangeGenre(genre, name)
+                return render_template('response.html', value=response)
+            raise APIError(f"{genre} is not in the database yet")
 
+        raise APIError(f"{name} is not in the database yet")
+    else:
+        return render_template('assignform.html')
 
-# SHOW ALL THE LYRICS FROM A GENRE/SINGER
-#@app.route("/<category>/<name>/list", methods = ["GET", "POST"])
-
-
-# ANALYZE THE SENTIMENT OF A GENRE/SINGER
-#@app.route("/<category>/<name>/sentiment", methods = ["GET", "POST"])
 
 
 if __name__ == "__main__":
