@@ -27,4 +27,4 @@ The songs are processed based on a trained sentiment analysis algorithm. Check h
 You can include new artists and genres to extend our database! Click on the Add New menu and enter the name of the genre or singer.
 
 
-Enjoy it at https://quiet-gorge-80517.herokuapp.com/
+Enjoy it at https://nameless-meadow-47774.herokuapp.com/
